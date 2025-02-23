@@ -1,0 +1,91 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+{% if request.user.is_authenticated %}
+<html lang="pt-br">
+    <head>
+        <title>Todos os Usuários</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
+    </head>
+
+    <body>
+        {% csrf_token %}
+        <div class="container mt-4">
+            <form name="form-users" id="formUsers" method="POST" action="/login/view/">
+                <h1>Usuários</h1>
+
+                {% if messages %}
+                <div id="message-container">
+                    {% for message in messages %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="link-container">
+                    <a class="btn btn-primary" href="/login/create/"><i class="fa-solid fa-user-plus"></i> Adicionar</a>
+                    <a class="fa-regular fa-file-pdf pdf-icon" href="/users-pdf"></a>
+                </div>
+
+                <div class="col-12 mt-4">
+                    <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuário</th>
+                            <th>Nome</th>
+                            <th>Status</th>
+                            <th>Criação</th>
+                            <th>Último Login</th>
+                        </tr>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.profile.name }}</td>
+                            <td>{{ user.is_active }}</td>
+                            <td>{{ user.date_joined }}</td>
+                            <td>{{ user.last_login }}</td>
+                            <td>
+                                <a href="{% url 'view_user' user.id %}" class="btn btn-info custom-icon-btn"><i class="fa-solid fa-circle-info"></i></a>
+                                <a href="{% url 'update_user' user.id %}" class="btn btn-warning custom-icon-btn"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="{% url 'delete_user' user.id %}" class="btn btn-danger custom-icon-btn"><i class="fa-solid fa-trash-can"></i></a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">Nenhum usuário encontrado</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </form>
+
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; Início</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                    </span>
+            
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">Próximo</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">Último &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>            
+
+            <div>
+                <a class="btn btn-primary" href="/home"><i class="fa-solid fa-arrow-left"></i> Voltar</a>
+            </div>
+        </div>
+    </body>
+</html>
+{% else %}
+    <h1>Usuário não autenticado</h1>
+    <a href="/login">Login</a>
+{% endif %}
+{% endblock %}

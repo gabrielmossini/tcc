@@ -1,0 +1,31 @@
+{% extends 'index.html' %} {% load static %} {% block content %}
+{% if request.user.is_authenticated %}
+<html lang="pt-br">
+    <head>
+        <title>Detalhes de {{user.1}}</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
+    </head>
+
+    <body>
+        <div class="container mt-4">
+                <h1>Detalhes de Usuário: {{user.username}}</h1>
+                <p>ID: {{ user.id }}</p>
+                <p>Usuário: {{ user.username }}</p>
+                <p>Nome: {{ user.profile.name }}</p>
+                <p>EMAIL: {{ user.email }}</p>
+                <p>CPF: {{ user.profile.cpf }}</p>
+                <p>Data de Nascimento: {{ user.profile.birthday }}</p>
+                <p>Status: {{ user.is_active }}</p>
+                <p>Data de Cadastro: {{ user.date_joined }}</p>
+                <p>Último Login: {{ user.last_login }}</p>
+
+            <a href="{% url 'update_user' user.id %}"class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
+            <a href="{% url 'view_users' %}" class="btn btn-primary"><i class="fa-solid fa-arrow-left"></i> Voltar</a>
+        </div>
+    </body>
+</html>
+{% else %}
+    <h1>Usuário não autenticado</h1>
+    <a href="/login">Login</a>
+{% endif %}
+{% endblock %}

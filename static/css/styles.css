@@ -1,0 +1,532 @@
+#video {
+    width: 640px;
+    height: 480px;
+    border: 1px solid black;
+}
+
+#alerts {
+    color: #f6f5f0;
+    /*cor laranja interessante da3e18*/
+}
+
+#permissao{
+  color: #f6f5f0;
+  background-color: #FB4934;
+  text-align: center;
+}
+
+/* Ensure the table takes full width of the container */
+#detection-table {
+    width: 100%;
+    border-collapse: collapse; /* Remove space between cells */
+}
+
+/* Style table headers and cells */
+#detection-table th, #detection-table td {
+    border: 1px solid #ddd; /* Add border to table cells */
+    padding: 8px; /* Add padding for better readability */
+    text-align: center; /* Align text to the left */
+}
+
+/* Add some styling for table headers */
+#detection-table th {
+    background-color: #f4f4f4; /* Light background color for headers */
+    font-weight: bold; /* Bold font for headers */
+}
+
+/* General styling for the status */
+#status {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #4b5361;
+}
+
+/* Style for the mute and unmute buttons */
+button {
+    padding: 10px 20px;
+    font-size: 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+/* Mute button styling */
+#mute-button {
+    background-color: #fb4934;
+    color: #f6f5f0;
+}
+
+/* Unmute button styling */
+#unmute-button {
+    background-color: #458588;
+    color: #f6f5f0;
+}
+
+/* Hover effect for buttons */
+button:hover {
+    opacity: 0.9;
+}
+
+/* Mute button active state (when muted) */
+button.muted {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
+
+/* Body Styles */
+body {
+    background-color: #f6f5f0; /* Custom background color */
+    color: #4b5361; /* Custom text color */
+    font-family: 'Roboto', sans-serif; /* Custom font family */
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    padding-bottom: 60px;
+    margin-bottom:50px;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme changes */
+}
+
+/* Additional Container Styling (if needed) */
+.container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Card Style */
+.row-cols-1, .row-cols-md-3 {
+    margin-bottom: 3rem; /* Add margin at the bottom for spacing */
+}
+
+/* Style for each card */
+.card {
+    border-radius: 8px; /* Rounded corners for the card */
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth hover effects */
+}
+
+/* Card header styling */
+.card-header {
+    background-color: #111213; /* Primary color background */
+    color: #f6f5f0;
+    padding: 1rem; /* Padding for spacing */
+    border-bottom: none; /* Remove the default border */
+    border-top-left-radius: 8px; /* Match the rounded corners */
+    border-top-right-radius: 8px; /* Match the rounded corners */
+}
+
+/* Text styling within the card */
+.card-header h4 {
+    font-weight: 400; /* Normal font weight */
+    margin: 0; /* Remove default margin */
+}
+
+/* Card body styling */
+.card-body {
+    padding: 2rem; /* Padding inside the card */
+    background-color: #f8f9fa; /* Light grey background */
+}
+
+/* List styling within the card body */
+.list-unstyled {
+    margin: 1.5rem 0; /* Vertical spacing for the list */
+}
+
+/* Button styling */
+.card-body .btn-primary {
+    background-color: #111213; /* Primary color for the button */
+    border-color: #111213; /* Match the border color */
+    color: white; /* White text for the button */
+    font-size: 1.25rem; /* Larger font size */
+    padding: 0.75rem 1.25rem; /* Padding for the button */
+    border-radius: 0.3rem; /* Slightly rounded corners */
+}
+
+/* Hover effects for the cards */
+.card:hover {
+    transform: translateY(-5px); /* Slightly lift the card on hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Add a shadow effect */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1.5rem; /* Adjust margin for smaller screens */
+    }
+
+    .card-body {
+        padding: 1.5rem; /* Adjust padding for smaller screens */
+    }
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    width: auto\9;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1 {
+    text-transform: uppercase;
+    color: #333; /* Custom text color */
+}
+
+h2 {
+    text-transform: uppercase;
+    font-family: "Righteous", sans-serif;
+    margin: 0;
+}
+
+h4 {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: "Righteous", sans-serif;
+}
+
+.custom-icon-btn i {
+    font-size: 1.2em; /* Adjust icon size */
+    color: black; /* Change icon color */
+}
+
+/* Table Configurations */
+table {
+    text-align: center;
+    margin-bottom: 20px; /* Space below the table */
+    width: 100%; /* Full width of container */
+    border-collapse: collapse; /* Collapse table borders */
+}
+
+thead th {
+    background-color: #f6f5f0; /* Dark background for table headers */
+    color: #4b5361; /* Light text color */
+    padding: 12px; /* Padding inside header cells */
+    text-align: left; /* Left align text */
+}
+
+tbody td {
+    background-color: #f6f5f0; /* Slightly lighter background for rows */
+    color: #4b5361; /* Light text color */
+    padding: 4px; /* Padding inside body cells */
+    border-top: 1px solid #f6f5f0; /* Dark border between rows */
+}
+
+/* Button Styles inside Table */
+.btn {
+    display: inline-block; /* Inline block display */
+    padding: 6px 12px; /* Padding inside buttons */
+    margin: 2px; /* Margin between buttons */
+    text-decoration: none; /* Remove underline from links */
+}
+
+/* buttons */
+.btn-primary {
+    padding: 10px 10px;
+    font-size: 1rem;
+    background-color: #111213;
+    border-color: #111213;
+    color: #f6f5f0;
+    border-radius: 50px; /* Rounded corners */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+}
+
+.btn-danger {
+    padding: 10px 10px;
+    font-size: 1rem;
+    background-color: #FB4934;
+    border-color: #FB4934;
+    border-radius: 50px; /* Rounded corners */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+}
+
+.btn-success {
+    padding: 10px 10px;
+    font-size: 1rem;
+    background-color: #458588;
+    border-color: #458588;
+    border-radius: 50px; /* Rounded corners */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+}
+
+.btn-info {
+    padding: 10px 10px;
+    font-size: 1rem;
+    background-color: #D4879C;
+    border-color: #D4879C;
+    border-radius: 50px; /* Rounded corners */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+}
+
+.btn-warning {
+    padding: 10px 10px;
+    font-size: 1rem;
+    background-color: #FABD2F;
+    border-color: #FABD2F;
+    border-radius: 50px; /* Rounded corners */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+}
+
+/* Hover Effect for the buttons */
+.btn-primary:hover {
+    background-color: #111213;
+    border-color: #111213;
+    transform: scale(1.05);
+}
+
+.btn-danger:hover {
+    background-color: #FB4934;
+    border-color: #FB4934;
+    transform: scale(1.05);
+}
+
+.btn-warning:hover {
+    background-color: #FABD2F;
+    border-color: #FABD2F;
+    transform: scale(1.05);
+}
+
+.btn-info:hover {
+    background-color: #D4879C;
+    border-color: #D4879C;
+    transform: scale(1.05);
+}
+
+/* PDF */
+.pdf-icon {
+    font-size: 28px; /* Size of the PDF icon */
+    color: #FB4934; /* Color of the PDF icon */
+    text-decoration: none; /* Remove underline from the link */
+    margin-left: 15px; /* Space between the icon and other items */
+    transition: color 0.3s; /* Smooth transition for hover effect */
+    display: inline-block; /* Ensure icon behaves as inline-block for better alignment */
+}
+
+/* Hover Effect for PDF */
+.pdf-icon:hover {
+    color: #FB4934;
+    transform: scale(1.05);
+}
+
+.link-container {
+    display: flex;
+    justify-content: space-between; /* Space between items */
+    align-items: center; /* Center items vertically */
+    padding: 10px 0px; /* Optional padding */
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    .pdf-icon {
+        font-size: 24px; /* Adjust size for smaller screens */
+        margin-left: 10px; /* Adjust spacing for smaller screens */
+    }
+}
+
+/* Custom styles for the select dropdown */
+.form-select {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #495057;
+    appearance: none; /* Removes default select arrow for custom styling */
+    background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="none" stroke="gray" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px;
+}
+
+.form-select:focus {
+    border-color: #FB4934;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Checkbox Styles */
+.form-group input[type="checkbox"] {
+    accent-color: #007bff; /* Color of the checkbox when checked (modern browsers) */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, border-color 0.3s; /* Smooth transition for color changes */
+}
+
+/* Focus and Checked States */
+.form-group input[type="checkbox"]:focus {
+    outline: 2px solid #20c997; /* Outline color when focused */
+}
+
+.form-group input[type="checkbox"]:checked {
+    background-color: #20c997; /* Background color when checked */
+    border-color: #20c997; /* Border color when checked */
+}
+
+/*Switch Styles*/
+.form-switch .form-check-input {
+    width: 40px;
+    height: 20px;
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    position: relative;
+}
+
+.form-switch .form-check-input:checked {
+    background-color: #20c997; /* Teal color */
+}
+
+.form-switch .form-check-input::before {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease-in-out;
+}
+
+.form-switch .form-check-input:checked::before {
+    transform: translateX(20px);
+}
+
+.form-switch .form-check-label {
+    padding-left: 2em;
+    font-weight: bold;
+    color: #6c757d;
+    transition: color 0.3s ease-in-out;
+}
+
+.form-switch .form-check-input:checked + .form-check-label {
+    color: #20c997; /* Teal color */
+}
+
+.form-check-label::before {
+    content: 'DESATIVADO';
+    margin-right: 0.5em;
+}
+
+.form-switch .form-check-input:checked + .form-check-label::before {
+    content: 'ATIVADO';
+    color: #20c997; /* Teal color */
+}
+
+
+/* CSS for the topbar */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #f6f5f0; /* Custom header background color */
+    color: #4b5361; /* Custom header text color */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme changes */
+}
+
+.topbar-logo {
+    max-width: 100px;
+    max-height: 75px;
+}
+
+.topbar-title {
+    margin: 0;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    color: #FB4934;
+}
+
+.topbar .col {
+    flex: 1;
+}
+
+.topbar .text-left {
+    display: flex;
+    align-items: center;
+}
+
+.topbar .text-center {
+    text-align: center;
+}
+
+.topbar .text-end {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* Footer */
+/* Footer Styles */
+.footer {
+    /*position: fixed;*/
+    bottom: 0;
+    width: 100%;
+    padding: 10px 0;
+    background-color: #f6f5f0; /* Custom header background color */
+    color: #FB4934; /* Custom header text color */
+    font-size: 0.9rem;
+    z-index: 1000;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme changes */
+}
+
+.footer .container {
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+.footer .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer p {
+    margin: 0;
+}
+
+.footer a {
+    color: #FB4934;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: #FB4934;
+}
+
+.footer .fa {
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+.footer .fa:hover {
+    color: #FB4934;
+}
+
+.me-2 {
+    margin-right: 0.5rem;
+}
+
+.nero-logo {
+    max-width: 45px;
+    max-height: 45px;
+}
+
+/* LOGIN INPUT */
+.icon {
+  padding: 10px;
+  background: dodgerblue;
+  min-width: 50px;
+  text-align: center;
+  background-color: #111213;
+  color: #f6f5f0;
+}
+
+.input-container {
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px;
+}

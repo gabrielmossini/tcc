@@ -1,0 +1,61 @@
+{% extends 'index.html' %} {% load static %} 
+{% block content %}
+{% if request.user.is_authenticated %}
+<html lang="pt-br">
+    <head>
+        <title>AEGIS - Create</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
+    </head>
+
+    <body>
+        <div class="container mt-4 d-flex justify-content-center">
+            <div class="form-wrapper col-12 col-md-8 col-lg-6">
+                <form name="form-users" id="formUsers" method="POST">
+                    {% csrf_token %}
+
+                    <div class="form-group mt-4">
+                        <label for="username">Usuário</label>
+                        <input class="form-control" type="text" name="username" id="username" placeholder="Nome do Usuário" required/>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="name">Nome Completo</label>
+                        <input class="form-control" type="text" name="name" id="name" placeholder="Nome Completo" required/>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="cpf">CPF</label>
+                        <input class="form-control" pattern="\d{3}\.?\d{3}\.?\d{3}-?\d{2}" title="CPF deve ter este formato XXX.XXX.XXX-XX ou XXXXXXXXXXX" type="text" name="cpf" id="cpf" placeholder="Digite o CPF" required/>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="birthday">Data de Nascimento</label>
+                        <input class="form-control" type="date" name="birthday" id="birthday" required/>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="email">Email</label>
+                        <input class="form-control" type="email" name="email" id="email" placeholder="Digite o Email" required/>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="password">Senha</label>
+                        <input class="form-control" type="password" name="password" id="password" placeholder="Digite a Senha" required/>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="password-conf">Confirmar Senha</label>
+                        <input class="form-control" type="password" name="password-conf" id="password-conf" placeholder="Confirme a Senha" required/>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <button class="btn btn-success" type="submit"><i class="fa-solid fa-check"></i> Confirmar</button>
+                        <a class="btn btn-primary" href="/view/"><i class="fa-solid fa-arrow-left"></i> Voltar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
+{% endif %}
+{% endblock %}

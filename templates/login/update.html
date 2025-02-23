@@ -1,0 +1,79 @@
+{% extends 'index.html' %} {% load static %} {% block content %}
+{% if request.user.is_authenticated %}
+
+<html lang="pt-br">
+    <head>
+        <title>Atualizar Usuário</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
+    </head>
+
+    <body>
+        <div class="container mt-4 d-flex justify-content-center">
+            <div class="form-wrapper col-12 col-md-8 col-lg-6">
+                <form method="post" action="{% url 'update_user' user_id=user.id %}">
+                    {% csrf_token %}
+
+                    <!-- Error message display -->
+                    {% if error %}
+                        <div class="alert {{ alert_class }}">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    
+
+                    <h1>Atualizar Usuário</h1>
+
+                    <hr class="divider mt-4 mb-4">
+
+                    <div class="form-group mt-4 col-6">
+                        <label>Status</label>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" role="switch" id="is_active" name="is_active" {% if user.is_active %} checked {% endif %}>
+                          <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                        </div>
+                    </div>
+
+                    <hr class="divider mt-4 mb-4">
+
+                    <div class="form-group mt-4">
+                        <label for="username">Usuário</label>
+                        <input class="form-control" type="text" name="username" id="username" value="{{ user.username }}" placeholder="Digite novo Usuário" required/>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="name">Nome Completo</label>
+                        <input class="form-control" type="text" name="name" id="name" value="{{ profile_form.instance.name }}" placeholder="Digite novo Nome"/>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="email">Email</label>
+                        <input class="form-control" type="email" name="email" id="email" value="{{ user.email }}" placeholder="Digite novo Email" required/>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="password"> Senha (deixe em branco para não alterar)</label>
+                        <input class="form-control" type="password" name="password" id="password" placeholder="Digite a nova senha (opcional)"/>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="cpf">CPF</label>
+                        <input class="form-control" pattern="\d{3}\.?\d{3}\.?\d{3}-?\d{2}" title="CPF deve ter este formato XXX.XXX.XXX-XX ou XXXXXXXXXXX" type="text" name="cpf" id="cpf" value="{{ profile_form.instance.cpf }}" placeholder="Digite novo CPF"/>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="birthday">Data de Nascimento</label>
+                        <input class="form-control" type="date" name="birthday" id="birthday"
+                               value="{{ profile_form.instance.birthday|date:'Y-m-d' }}"/>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <button class="btn btn-success" type="submit"><i class="fa fa-check"></i> Confirmar</button>
+                        <a class="btn btn-primary" href="{% url 'view_users' %}"><i class="fa fa-arrow-left"></i> Voltar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
+{% endif %}
+{% endblock %}

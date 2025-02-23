@@ -1,0 +1,45 @@
+{% extends 'index.html' %} {%load static %} {% block content %}
+<html lang="pt-br">
+    <head>
+        <title>AEGIS - Login</title>
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    </head>
+
+    <body>
+        <div class="container mt-4">
+            <form name="formPainel" id="formPainel" method="post" class="col-6 mt-4 m-auto">
+                <!-- Error in confirm password -->
+                {% if mensagem %}
+                <div class="alert {{class}}">
+                    {{mensagem}}
+                </div>
+
+                {% endif %} {% csrf_token %}
+
+                <div class="container mt-4" id="login">
+                    <div class="col text-center">
+                        <img src="/static/img/logo.webp/"/>
+                    </div>
+                    <div class="col text-center">
+                        <h4 class="py-4 topbar-title">Aegis - Acesso Restrito</h4>
+                    </div>
+                    <div class="input-container mt-4">
+                        <input class="form-control" type="text" name="user" id="name" placeholder="Usuário"/>
+                        <i class="fa-solid fa-user icon"></i>
+                    </div>
+                    <div class="input-container mt-4">
+                        <input class="form-control" type="password" name="password" id="password" placeholder="Senha"/>
+                        <i class="fa-solid fa-lock icon"></i>
+                    </div>
+                    <div class="col text-center">
+                        <button class="btn btn-primary mt-4" type="submit">
+                            ENTRAR
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
+{% endblock %}

@@ -1,0 +1,8 @@
+Django==5.1.6
+PyMySQL==1.1.1
+channels==4.2.0
+opencv-python==4.11.0.86
+cvzone==1.6.1
+psutil==7.0.0
+ultralytics==8.3.75
+reportlab==4.3.1

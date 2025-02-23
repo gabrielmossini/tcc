@@ -1,0 +1,23 @@
+{% extends 'index.html' %} {% load static %} {% block content %}
+{% if request.user.is_authenticated %}
+
+<html lang="pt-br">
+    <head>
+        <title>Exclusão de {{user.username}}</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
+    </head>
+
+    <body>
+        <div class="container mt-4">
+            <h1>Confirmar Exclusão?</h1>
+            <p>Você tem certeza que deseja excluir {{ user.username }}? Ao confirmar a exclusão o processo não podera ser desfeito.</p>
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger custom-icon-btn">Sim, excluir</button>
+                <a href="{% url 'view_users' %}" class="btn btn-primary custom-icon-btn">Não, voltar</a>
+            </form>
+        </div>
+    </body>
+</html>
+{% endif %}
+{% endblock %}

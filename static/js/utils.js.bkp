@@ -1,0 +1,21 @@
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+document.getElementById("birthday").addEventListener("blur", function () {
+    let date = this.value.split('/');
+    if (date.length === 3) {
+        this.value = `${date[2]}-${date[1]}-${date[0]}`; // Converts to YYYY-MM-DD for MySQL
+    }
+});

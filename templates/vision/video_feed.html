@@ -1,0 +1,19 @@
+{% load static %} {% if request.user.is_authenticated %}
+
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>Object Detection</title>
+    </head>
+
+    <body>
+        <h1>Object Detection</h1>
+        <button id="start-camera">Start Camera</button>
+        <div id="video-container" style="display: none;">
+            <img id="video" width="640" height="480" />
+        </div>
+
+        <script src="{% static '/js/script.js' %}"></script>
+    </body>
+</html>
+{% endif %}

@@ -1,0 +1,36 @@
+{% extends 'index.html' %} {% load static %} {% block content %}
+
+<html lang="pt-br">
+    <head>
+        <title>AEGIS - Sobre</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
+    </head>
+
+    <body>
+        <div class="container mt-4 d-flex justify-content-center">
+            <div class="form-wrapper col-12 col-md-8 col-lg-6">
+                <div class="text-center">
+                    <img src="/static/img/toplogo.webp" alt="Software Image" class="img-fluid">
+                </div>
+                
+                <h2 class="text-center">Sobre o Software</h2>
+                <div class="about-text mt-4 center">    
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam convallis, lorem at ultrices auctor, ligula augue iaculis tortor, at facilisis mi libero vel metus. Vivamus consequat arcu at ante interdum, sed varius turpis pharetra. Integer sollicitudin vehicula urna, et volutpat nisl aliquam eget. Proin mollis dolor nec lacus vehicula, in fringilla erat commodo.</p>
+                    <p>Curabitur sit amet est nec arcu lacinia euismod et nec dolor. Aliquam erat volutpat. Duis fermentum tellus id nisl tincidunt, et malesuada turpis elementum. Nam ut lorem sit amet velit varius posuere. Integer feugiat tortor sed velit dignissim, et dignissim libero dictum.</p>
+                </div>
+
+                <hr class="divider mt-4 mb-4">
+                <div class="text-center">
+                    <img src="/static/img/nero_logo.ico" alt="Software Image" class="about-text mt-4 center">
+                </div>
+                 
+                <h2 class="text-center">Sobre a Empresa</h2>
+                <div class="about-text mt-4 center">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam convallis, lorem at ultrices auctor, ligula augue iaculis tortor, at facilisis mi libero vel metus. Vivamus consequat arcu at ante interdum, sed varius turpis pharetra. Integer sollicitudin vehicula urna, et volutpat nisl aliquam eget. Proin mollis dolor nec lacus vehicula, in fringilla erat commodo.</p>
+                    <p>Curabitur sit amet est nec arcu lacinia euismod et nec dolor. Aliquam erat volutpat. Duis fermentum tellus id nisl tincidunt, et malesuada turpis elementum. Nam ut lorem sit amet velit varius posuere. Integer feugiat tortor sed velit dignissim, et dignissim libero dictum.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+{% endblock %}

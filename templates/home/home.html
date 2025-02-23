@@ -1,0 +1,48 @@
+{% extends 'index.html' %} {% load static %} 
+{% block content %}
+<html lang="pt-br">
+    <head>
+        <title>AEGIS - Homepage</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
+    </head>
+
+    <body>
+        <div class="container mt-4">
+        <h1>Bem-Vindo {{ user.username }} no Aegis</h1>
+            <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+                <div class="col">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header">
+                            <h4 class="my-0 fw-normal">detecção</h4>
+                        </div>
+
+                        <div class="card-body">
+                            <ul class="list-unstyled mt-3 mb-4">
+                                <li>Seção para detecção de objetos</li>
+                            </ul>
+                            <a class="w-100 btn btn-lg btn-primary" href="{% url 'detect' %}">Acessar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="col">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header">
+                                <h4 class="my-0 fw-normal">usuários</h4>
+                            </div>
+
+                            <div class="card-body">
+                                <ul class="list-unstyled mt-3 mb-4">
+                                    <li>Controle de Usuários</li>
+                                </ul>
+                                <a class="w-100 btn btn-lg btn-primary" href="{% url 'view_users' %}">Acessar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+{% endblock %}

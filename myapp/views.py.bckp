@@ -1,0 +1,314 @@
+#from django.conf import settings
+from django.core.paginator import Paginator
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from django.contrib.auth import authenticate, logout, login as auth_login
+from django.contrib.auth.models import User
+from django.db import connection, transaction, IntegrityError
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from datetime import datetime
+
+def home(request):
+    return render(request, 'home/home.html')
+
+def about(request):
+    return render(request, 'about/about.html')
+
+def privacy(request):
+    return render(request, 'about/privacy.html')
+
+def terms(request):
+    return render(request, 'about/terms.html')
+
+def custom_404_view(request, exception):
+    return render(request, 'error/404.html', status=404)
+
+def custom_403_view(request, exception):
+    return render(request, 'error/403.html', status=403)
+
+def create(request):
+    return render(request, 'login/create.html', {
+    })
+
+def login(request):
+    data = {}
+    if request.method == 'POST':
+        username = request.POST.get('user')
+        password = request.POST.get('password')
+
+        if username and password:
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                auth_login(request, user)
+                return redirect('home')
+            else:
+                data['mensagem'] = 'Usuário ou Senha Inválidos!!'
+                data['class'] = 'alert-danger'
+        else:
+            data['mensagem'] = 'Por favor, preencha todos os campos.'
+            data['class'] = 'alert-warning'
+
+    return render(request, 'login/login.html', data)
+
+def calculate_age(birth_date):
+    today = datetime.today()
+    age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+    return age
+
+def store(request):
+    data = {}
+    if request.method == 'POST':
+        # Extract data from request.POST
+        username = request.POST.get('user')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password_conf = request.POST.get('password-conf')
+        name = request.POST.get('name')
+        cpf = request.POST.get('cpf')
+        birthday = request.POST.get('birthday')
+
+        # Validate password confirmation
+        if (request.POST['password'] != request.POST['password-conf']):
+            data['mensagem'] = 'Senha e confirmação de senhas diferentes!'
+            data['class'] = 'alert-danger'
+        else:
+              try:
+                  # Parse birthday and calculate age
+                  birthday = datetime.strptime(birthday, '%Y-%m-%d').date()
+                  age = calculate_age(birthday)
+
+                  # Check age range
+                  if age < 18 or age > 100:
+                      data['mensagem'] = 'A idade deve estar entre 18 e 100 anos!'
+                      data['class'] = 'alert-danger'
+                  else:
+                      with transaction.atomic():
+                          # Check if CPF already exists
+                          with connection.cursor() as cursor:
+                              cursor.execute("SELECT id FROM myapp_profile WHERE cpf = %s", [cpf])
+                              cpf_exists = cursor.fetchone()
+
+                          if cpf_exists:
+                              data['mensagem'] = 'CPF já cadastrado!'
+                              data['class'] = 'alert-danger'
+                          else:
+
+                            # Create the user in auth_user table
+                            user = User.objects.create_user(
+                                username=username,
+                                email=email,
+                                password=password)
+
+                            user.save()
+                            # Assign the user to the selected group
+
+                            # Insert additional profile data using raw SQL
+                            with connection.cursor() as cursor:
+                                cursor.execute("""
+                                    INSERT INTO myapp_profile (user_id, name, cpf, birthday)
+                                    VALUES (%s, %s, %s, %s)
+                                    """, [user.id, name, cpf, birthday])
+
+                            data['mensagem'] = 'Usuário Cadastrado com Sucesso!'
+                            data['class'] = 'alert-success'
+              except IntegrityError as e:
+                  data['mensagem'] = f'Ocorreu um erro: {str(e)}'
+                  data['class'] = 'alert-danger'
+
+    return render(request, 'login/create.html', data)
+
+#View all Users added in the system
+def view(request):
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT u.id, u.username, p.name, u.is_active, u.date_joined, u.last_login
+            FROM auth_user u
+            INNER JOIN myapp_profile p
+            ON u.id = p.user_id
+            """)
+        users = cursor.fetchall()
+        paginator = Paginator(users, 10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+    return render(request, 'login/view.html', {'users': page_obj})
+
+#Show a detailed info about a user
+def view_user(request, user_id):
+    with connection.cursor() as cursor:
+        # Join auth_user with userprofile to fetch detailed information for a specific user
+        cursor.execute("""
+        SELECT
+            u.id,
+            u.username,
+            p.name,
+            u.email,
+            p.cpf,
+            p.birthday,
+            u.is_active,
+            u.date_joined,
+            u.last_login
+        FROM
+            auth_user u
+        INNER JOIN
+            myapp_profile p
+        ON
+            u.id = p.user_id
+        WHERE
+            u.id = %s
+        """, [user_id])
+
+        user = cursor.fetchone()
+
+    if user is None:
+        return render(request, '404.html', status=404)
+
+    return render(request, 'login/view_user.html', {'user': user})
+
+def delete_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        user.delete()
+        return redirect('view_users')  # Adjust the redirect as necessary
+    return render(request, 'login/delete.html', {'user': user})
+
+def update_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    data = {}
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        name = request.POST.get('name')
+        cpf = request.POST.get('cpf')
+        birthday_str = request.POST.get('birthday')
+        is_active = request.POST.get('is_active') == 'on'
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT id FROM myapp_profile WHERE cpf = %s AND user_id != %s", [cpf, user_id])
+                cpf_exists = cursor.fetchone()
+
+            if cpf_exists:
+                data['mensagem'] = 'CPF já cadastrado!'
+                data['class'] = 'alert-danger'
+            else:
+                birthday = datetime.strptime(birthday_str, '%Y-%m-%d').date()
+                age = calculate_age(birthday)
+
+                if age < 18 or age > 70:
+                    data['mensagem'] = 'A idade deve estar entre 18 e 70 anos!'
+                    data['class'] = 'alert-danger'
+                else:
+                    with transaction.atomic():
+                        user.username = username
+                        user.email = email
+                        if password:
+                            user.set_password(password)
+                        user.is_active = is_active
+                        user.save()
+
+                        with connection.cursor() as cursor:
+                            cursor.execute("""
+                                UPDATE myapp_profile
+                                SET name = %s, cpf = %s, birthday = %s
+                                WHERE user_id = %s
+                            """, [name, cpf, birthday, user_id])
+
+                    data['mensagem'] = 'Usuário atualizado com sucesso!'
+                    data['class'] = 'alert-success'
+                    return redirect('view_user', user_id=user_id)
+        except IntegrityError as e:
+            data['mensagem'] = f'Ocorreu um erro: {str(e)}'
+            data['class'] = 'alert-danger'
+
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT name, cpf, birthday
+            FROM myapp_profile
+            WHERE user_id = %s
+        """, [user_id])
+        profile = cursor.fetchone()
+
+    if profile:
+        user_profile = {
+            'name': profile[0],
+            'cpf': profile[1],
+            'birthday': profile[2]
+        }
+    else:
+        user_profile = {}
+
+    context = {
+        'user': user,
+        'profile': user_profile,
+        'error': data.get('mensagem'),
+        'alert_class': data.get('class')
+    }
+
+    return render(request, 'login/update.html', context)
+
+def logoutUser(request):
+    if request.user.is_authenticated:
+        logout(request)
+    return redirect('login')
+
+def users_PDF(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="usuarios_relatorio.pdf"'
+
+    pdf = canvas.Canvas(response, pagesize=letter)
+    width, height = letter
+
+    pdf.setFont("Helvetica-Bold", 14)
+    pdf.drawString(100, height - 50, "Todos os Usuários")
+
+    pdf.setFont("Helvetica", 12)
+
+    y = height - 80
+    margin = 30
+
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT
+                u.username,
+                p.name,
+                u.email,
+                p.cpf,
+                p.birthday,
+                u.date_joined,
+                u.is_active
+            FROM
+            pdf.drawString(margin, y - 160, "-------------------------------------------------------")
+                auth_user u
+            INNER JOIN
+                myapp_profile p
+            ON
+                u.id = p.user_id
+        """)
+        users = cursor.fetchall()
+
+        for item in users:
+            if y < margin + 50:
+                pdf.showPage()
+                pdf.setFont("Helvetica-Bold", 14)
+                pdf.drawString(100, height - 50, "Todos os Usuários:")
+                pdf.setFont("Helvetica", 10)
+                y = height - 80
+
+            pdf.drawString(margin, y - 20, f"Nome: {item[1]}")
+            pdf.drawString(margin, y - 40, f"Usuario: {item[0]}")
+            pdf.drawString(margin, y - 60, f"Email: {item[2]}")
+            pdf.drawString(margin, y - 80, f"CPF: {item[3]}")
+            pdf.drawString(margin, y - 100, f"Data de Nascimento: {item[4]}")
+            pdf.drawString(margin, y - 120, f"Data de Cadastro: {item[5]}")
+            pdf.drawString(margin, y - 140, f"Status: {'Ativo' if item[6] else 'Inativo'}")
+            y -= 180
+
+    pdf.showPage()
+    pdf.save()
+
+    return response

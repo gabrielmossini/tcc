@@ -1,0 +1,102 @@
+{% extends 'index.html' %} {% load static %} {% block content %}
+<html lang="pt-br">
+    <head>
+        <title>AEGIS - Privacidade</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
+    </head>
+
+    <body>
+        <div class="container mt-4 d-flex justify-content-center">
+            <div class="form-wrapper col-12 col-md-8 col-lg-6">
+                <div class="text-center">
+                    <img src="/static/img/toplogo.webp" alt="Software Image" class="img-fluid">
+                </div>
+
+                <nav class="navbar navbar-expand-md navbar-light">
+                    <div class="collapse navbar-collapse">
+                        <ul>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#intro">Introdução</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#info">Informações Gerais</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#usage">Uso das Informações</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#sharing">Compartilhamento de Informações</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#security">Segurança</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#rights">Seus Direitos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#changes">Alterações</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#contact">Contato</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <hr class="divider mt-4 mb-4">
+                <h2 class="text-center">Política de Privacidade</h2>
+
+                <div class="about-text mt-4">    
+                    <div id="intro" class="section">
+                        <h3>1. Introdução</h3>
+                        <p>Esta Política de Privacidade descreve como coletamos, usamos e protegemos suas informações ao usar nosso software open source, licenciado sob a MIT License. Ao utilizar nosso software, você concorda com a coleta e uso de informações conforme descrito nesta política.</p>
+                    </div>
+
+                    <div id="info" class="section">
+                        <h3>2. Informações Gerais</h3>
+                        <h3>2.1 Informações Pessoais</h3>
+                        <p>Coletamos as seguintes informações pessoais:</p>
+                        <p>&#x2022; <b>Nome:</b> Para identificação e personalização</p>
+                        <p>&#x2022; <b>CPF:</b> Para verificação de identidade</p>
+                        <p>&#x2022; <b>Data de Nascimento:</b> Para validar a idade e personalizar experiências</p>
+                        <p>&#x2022; <b>E-Mail:</b> Para comunicação e recuperação de conta</p>
+                    </div>
+
+                    <div id="usage" class="section">
+                        <h3>3. Uso das Informações</h3>
+                        <p>Utilizamos as informações coletadas para:</p>
+                        <p>&#x2022; <b>Nome e CPF:</b> Identificar usuários</p>
+                        <p>&#x2022; <b>Data de Nascimento:</b> Garantir que os usuários atendam aos requisitos de idade e personalizar</p>
+                        <p>&#x2022; <b>E-Mail:</b> Enviar notificações, recuperar senhas e fornecer suporte</p>
+                    </div>
+
+                    <div id="sharing" class="section">
+                        <h3>4. Compartilhamento de Informações</h3>
+                        <p>Não compartilhamos suas informações pessoais com terceiros. As informações coletadas são usadas exclusivamente para os fins descritos nesta política e não são divulgadas fora da equipe de desenvolvimento.</p>
+                    </div>
+
+                    <div id="security" class="section">
+                        <h3>5. Segurança</h3>
+                        <p>Adotamos medidas técnicas e administrativas para proteger suas informações pessoais contra acesso não autorizado, alteração, divulgação ou destruição. No entanto, como o software é open source e pode ser modificado por terceiros, não podemos garantir a segurança absoluta das informações.</p>
+                    </div>
+
+                    <div id="rights" class="section">
+                        <h3>6. Seus Direitos</h3>
+                        <p>Você pode revisar, corrigir ou excluir suas informações pessoais, se aplicável, e tem o direito de descontinuar o uso do software a qualquer momento.</p>
+                    </div>
+
+                    <div id="changes" class="section">
+                        <h3>7. Alterações na Política de Privacidade</h3>
+                        <p>Podemos atualizar esta Política de Privacidade ocasionalmente. Quaisquer alterações serão publicadas no repositório do software e estarão disponíveis para revisão.</p>
+                    </div>
+
+                    <div id="contact" class="section">
+                        <h3>8. Contato</h3>
+                        <p>Se você tiver perguntas sobre esta Política de Privacidade, entre em contato conosco através do repositório do software ou das informações de contato fornecidas no mesmo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+{% endblock %}
