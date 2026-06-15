@@ -1,4 +1,4 @@
-{% extends 'index.html' %} {% load static %} 
+{% extends 'base.html' %} {% load static %} 
 {% block content %}
 <html lang="pt-br">
     <head>
@@ -25,22 +25,6 @@
                     </div>
                 </div>
 
-                <div>
-                    <div class="col">
-                        <div class="card mb-4 shadow-sm">
-                            <div class="card-header">
-                                <h4 class="my-0 fw-normal">usuários</h4>
-                            </div>
-
-                            <div class="card-body">
-                                <ul class="list-unstyled mt-3 mb-4">
-                                    <li>Controle de Usuários</li>
-                                </ul>
-                                <a class="w-100 btn btn-lg btn-primary" href="{% url 'view_users' %}">Acessar</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </body>

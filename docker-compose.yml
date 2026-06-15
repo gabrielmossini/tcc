@@ -1,0 +1,16 @@
+cat > /home/mossini/Workspace/Aegis/docker-compose.yml << 'EOF'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aegis_web
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - ./models:/app/models
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+    restart: unless-stopped
+EOF

@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateAll(detectionCount, detectedObjects) {
         updateChartData(detectionCount);
         updateDetectionTable(detectionCount);
-        handleDetectionAlert(detectedObjects);
+        //handleDetectionAlert(detectedObjects);
     }
 
     // Start polling
