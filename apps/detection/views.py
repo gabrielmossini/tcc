@@ -1,60 +1,56 @@
-import os, cv2, cvzone, math, json, gc, time, threading
+import os, cv2, cvzone, time, threading
 
 from django.shortcuts import render
-from ultralytics import YOLO
 from django.http import StreamingHttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.apps import apps
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
 
 from .state import detection_state
-from .inference import CLASS_NAMES, NO_PPE_CLASSES
-
-#model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'best.pt')
-#model = YOLO(model_path)
-
-
-classNames = ['Protecao de Ouvido', 'Capacete', 'Mascara', 'Sem Luva', 'Sem Capacete', 'Sem Botina', 'Sem Colete Refletivo', 'Botina',
-            'Oculos de Protecao', 'Luvas de Protecao', 'Colete Refletivo']
 
 
 def _get_detector():
     return apps.get_app_config('detection').detector
 
+@login_required(login_url=reverse_lazy('login'))
 def detect(request):
     return render(request, 'detection/detect.html')
 
+
+@login_required(login_url=reverse_lazy('login'))
 def video_feed(request):
     return StreamingHttpResponse(
         video_feed_generator(),
-          content_type='multipart/x-mixed-replace; boundary=frame'
+        content_type='multipart/x-mixed-replace; boundary=frame'
     )
+
 
 def video_feed_generator():
     detector = _get_detector()
     cap = cv2.VideoCapture(0)
-    
+
     if not cap.isOpened():
-        #print("Error: Não foi possível abrir a câmera.")
+        error_img = 255 * __import__('numpy').ones((240, 640, 3), dtype='uint8')
+        cv2.putText(error_img, 'Camera not found', (30, 120),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 200), 2)
+        _, buffer = cv2.imencode('.jpg', error_img)
+        yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n'
+               + buffer.tobytes() + b'\r\n\r\n')
         return
 
-    #global latest_detections
-    #latest_detections = []
     frame_index = 0
 
-    #batch_size = 1
-    #frame_buffer = []
-    
     try:
         while True:
             start_time = time.time()
             success, img = cap.read()
-            
+
             if not success:
-                #print("Error: Falha ao capturar imagem.")
                 break
 
             result = detector.run(img)
-            detections = result ['detections']
+            detections = result['detections']
             counts = result['counts']
 
             detection_state.update(
@@ -65,7 +61,7 @@ def video_feed_generator():
             for d in detections:
                 x1, y1, x2, y2 = (int(v) for v in d['box'])
                 color = (0, 0, 255) if d['alert'] else (0, 255, 0)
-                
+
                 if d['alert']:
                     cv2.putText(
                         img, 'ALERTA', (11, 100), 0, 1,
@@ -83,17 +79,20 @@ def video_feed_generator():
                     colorR=color, offset=6
                 )
 
-            inference_time = (time.time() - start_time) * 1000  # Tempo em ms
+            inference_time = (time.time() - start_time) * 1000
             height, width = img.shape[:2]
-            resolution = f'{width}x{height}'
-            caption = f"{frame_index}: {resolution} " + ", ".join([f'{v} {k}' for k, v in counts.items()]) + f", {inference_time:.1f} ms"
+            caption = (
+                f"{frame_index}: {width}x{height} "
+                + ", ".join([f'{v} {k}' for k, v in counts.items()])
+                + f", {inference_time:.1f} ms"
+            )
             cv2.putText(
-                img, caption, (10, 30), 
+                img, caption, (10, 30),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2
             )
 
             frame_index += 1
-            
+
             ret, buffer = cv2.imencode('.jpg', img)
             if not ret:
                 continue
@@ -104,18 +103,21 @@ def video_feed_generator():
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n'
             )
 
-            gc.collect()
-
     finally:
         cap.release()
 
+
+@login_required(login_url=reverse_lazy('login'))
 def get_detections(request):
     snapshot = detection_state.snapshot()
-
     return JsonResponse({
         'detections': snapshot['detections'],
         'detectionCount': snapshot['counts']
     })
+
+def process_image_logic(image_path):
+    model.predict(source=image_path, save=True, project=output_dir, name="results")
+
 
 def play_sound():
     if not detection_state.snapshot()['muted']:
@@ -127,11 +129,11 @@ def play_sound():
             daemon=True
         ).start()
 
-@csrf_exempt
-def toggle_mute(request):
-    global mute
-    if request.method == 'POST':
-        mute = not mute
-        return JsonResponse({'muted': mute})
-    return JsonResponse({'error': 'Invalid request'}, status=400)
 
+@csrf_exempt
+@login_required(login_url=reverse_lazy('login'))
+def toggle_mute(request):
+    if request.method == 'POST':
+        muted = detection_state.toggle_mute()
+        return JsonResponse({'muted': muted})
+    return JsonResponse({'error': 'Invalid request'}, status=400)

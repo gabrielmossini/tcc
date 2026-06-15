@@ -1,9 +1,4 @@
-# apps/detection/inference.py
-
-import os
-import math
-import cv2
-import threading
+import os, math, cv2, threading
 from ultralytics import YOLO
 
 CLASS_NAMES = [
