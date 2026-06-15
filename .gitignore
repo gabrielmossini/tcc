@@ -1,4 +1,13 @@
+.venv/
 venv/
 staticfiles/
 migrations/
 __pycache__/
+*.bckp
+*.bkp
+*.pt
+.envmodels/*.pt
+*.sqlite3
+.env
+*.bckp
+*.bkp

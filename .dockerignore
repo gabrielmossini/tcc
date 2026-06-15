@@ -1,0 +1,20 @@
+cat > /home/mossini/Workspace/Aegis/.dockerignore << 'EOF'
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+db.sqlite3
+staticfiles/
+migrations/
+models/*.pt
+.git/
+.gitignore
+.env
+*.bckp
+*.bkp
+Dockerfile
+docker-compose.yml
+docker/
+.DS_Store
+EOF
