@@ -1,32 +1,83 @@
-{% extends 'base.html' %} {% load static %} 
+{% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<html lang="pt-br">
-    <head>
-        <title>AEGIS - Homepage</title>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
-    </head>
 
-    <body>
-        <div class="container mt-4">
-        <h1>Bem-Vindo {{ user.username }} no Aegis</h1>
-            <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-                <div class="col">
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-header">
-                            <h4 class="my-0 fw-normal">detecção</h4>
-                        </div>
+<div class="page-header">
+    <div>
+        <div class="page-title">Dashboard</div>
+        <div class="page-subtitle">Resumo operacional diário</div>
+    </div>
+</div>
 
-                        <div class="card-body">
-                            <ul class="list-unstyled mt-3 mb-4">
-                                <li>Seção para detecção de objetos</li>
-                            </ul>
-                            <a class="w-100 btn btn-lg btn-primary" href="{% url 'detect' %}">Acessar</a>
-                        </div>
-                    </div>
-                </div>
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <div class="kpi-label">Compliance Rate</div>
+        <div class="kpi-value success">{{ compliance_rate }}%</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-label">Violações Hoje</div>
+        <div class="kpi-value warning">{{ violations_count }}</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-label">Detecções Ao Vivo</div>
+        <div class="kpi-value" id="live-count">—</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-label">Eventos Críticos</div>
+        <div class="kpi-value danger">{{ critical_count }}</div>
+    </div>
+</div>
 
-            </div>
+<div class="section-grid">
+    <div>
+        <div class="section-header">
+            <span class="section-title">Violações Recentes</span>
+            <a href="{% url 'events' %}" class="badge badge-info">Ver Todas</a>
         </div>
-    </body>
-</html>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    <th>Violação</th>
+                    <th>Localização</th>
+                    <th>Severidade</th>
+                </tr>
+            </thead>
+            <tbody id="events-tbody">
+                {% for ev in recent_events %}
+                <tr>
+                    <td>{{ ev.time }}</td>
+                    <td>{{ ev.violation }}</td>
+                    <td>{{ ev.camera }}</td>
+                    <td><span class="badge {{ ev.badge }}">{{ ev.severity }}</span></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align:center;color:var(--text-muted)">No violations recorded today</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+(function () {
+    function updateLiveCount() {
+        fetch("{% url 'get_detections' %}")
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (!data) return;
+                const counts = data.detectionCount || {};
+                const total = Object.values(counts).reduce((a, b) => a + b, 0);
+                document.getElementById('live-count').textContent = total;
+            })
+            .catch(() => {});
+    }
+
+    updateLiveCount();
+    setInterval(updateLiveCount, 3000);
+})();
+</script>
+
 {% endblock %}

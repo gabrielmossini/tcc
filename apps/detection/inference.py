@@ -1,4 +1,5 @@
-import os, math, cv2, threading
+import threading
+
 from ultralytics import YOLO
 
 CLASS_NAMES = [
@@ -27,28 +28,18 @@ class PPEDetector:
         detections = []
         counts = {}
 
-        boxes, confidences, class_ids = [], [], []
-
         for r in results:
             for box in r.boxes:
                 conf = float(box.conf[0])
                 if conf < self.confidence_threshold:
                     continue
                 cls = int(box.cls[0])
+                cls_name = CLASS_NAMES[cls]
                 x1, y1, x2, y2 = (float(v) for v in box.xyxy[0])
-                boxes.append([x1, y1, x2, y2])
-                confidences.append(conf)
-                class_ids.append(cls)
-
-        indices = cv2.dnn.NMSBoxes(boxes, confidences, self.confidence_threshold, 0.4)
-
-        if len(indices) > 0:
-            for i in indices.flatten():
-                cls_name = CLASS_NAMES[class_ids[i]]
                 detections.append({
                     'class': cls_name,
-                    'confidence': round(confidences[i], 2),
-                    'box': boxes[i],
+                    'confidence': round(conf, 2),
+                    'box': [x1, y1, x2, y2],
                     'alert': cls_name in NO_PPE_CLASSES
                 })
                 counts[cls_name] = counts.get(cls_name, 0) + 1

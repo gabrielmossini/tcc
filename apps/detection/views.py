@@ -6,9 +6,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.apps import apps
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from django.utils import timezone
 
-from .state import detection_state
-
+from .models import DetectionEvent
+from .state import detection_state, violation_tracker
+from apps.accounts.views import _CRITICAL_CLASSES, _VIOLATION_LABEL
 
 def _get_detector():
     return apps.get_app_config('detection').detector
@@ -24,7 +26,6 @@ def video_feed(request):
         video_feed_generator(),
         content_type='multipart/x-mixed-replace; boundary=frame'
     )
-
 
 def video_feed_generator():
     detector = _get_detector()
@@ -58,17 +59,26 @@ def video_feed_generator():
                 counts
             )
 
+            violation_confs = {d['class']: d['confidence'] for d in detections if d['alert']}
+            newly_violated  = violation_tracker.update(set(violation_confs))
+            active_violations = violation_tracker.active_violations()
+
+            if newly_violated:
+                DetectionEvent.objects.bulk_create([
+                    DetectionEvent(class_name=cls, confidence=violation_confs.get(cls, 0.0))
+                    for cls in newly_violated
+                ])
+                play_sound()
+
+            if active_violations:
+                cv2.putText(
+                    img, 'ALERTA', (11, 100), 0, 1,
+                    (0, 0, 255), thickness=3, lineType=cv2.LINE_AA
+                )
+
             for d in detections:
                 x1, y1, x2, y2 = (int(v) for v in d['box'])
                 color = (0, 0, 255) if d['alert'] else (0, 255, 0)
-
-                if d['alert']:
-                    cv2.putText(
-                        img, 'ALERTA', (11, 100), 0, 1,
-                        (0, 0, 255), thickness=3, lineType=cv2.LINE_AA
-                    )
-                    play_sound()
-
                 cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
                 cvzone.putTextRect(
                     img,
@@ -128,6 +138,48 @@ def play_sound():
             target=lambda: os.system(f'aplay "{sound_path}"'),
             daemon=True
         ).start()
+
+
+@login_required(login_url=reverse_lazy('login'))
+def events(request):
+    today = timezone.now().date()
+
+    all_today = DetectionEvent.objects.filter(timestamp__date=today)
+    violations_today = all_today.filter(class_name__startswith='Sem')
+
+    violations_count = violations_today.count()
+    total_count = all_today.count()
+    compliance_rate = round((1 - violations_count / total_count) * 100, 1) if total_count else 100.0
+    critical_count = violations_today.filter(class_name__in=_CRITICAL_CLASSES).count()
+
+    recent_events = []
+    for ev in violations_today.order_by('-timestamp')[:5]:
+        is_critical = ev.class_name in _CRITICAL_CLASSES
+        recent_events.append({
+            'time': timezone.localtime(ev.timestamp).strftime('%H:%M'),
+            'violation': _VIOLATION_LABEL.get(ev.class_name, ev.class_name),
+            'camera': ev.camera_id or 'CAM-01',
+            'badge': 'badge-danger' if is_critical else 'badge-warning',
+            'severity': 'Critical' if is_critical else 'Warning',
+        })
+
+    return render(request, 'detection/events.html', {
+        'compliance_rate': compliance_rate,
+        'violations_count': violations_count,
+        'critical_count': critical_count,
+        'recent_events': recent_events,
+    })
+    
+
+
+@login_required(login_url=reverse_lazy('login'))
+def reports(request):
+    return render(request, 'detection/reports.html')
+
+
+@login_required(login_url=reverse_lazy('login'))
+def cameras(request):
+    return render(request, 'detection/cameras.html')
 
 
 @csrf_exempt
