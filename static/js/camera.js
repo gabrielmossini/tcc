@@ -49,13 +49,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 alertElement.style.color = "red";
                 alertsDiv.appendChild(alertElement);
             }
-            updateChartData(obj); // Update the chart for each detected object
+            updateChartData(obj);
         });
     }
 
     function updateDetectionTable(detectionCount) {
         const tableBody = document.getElementById('detection-table-body');
-        tableBody.innerHTML = '';  // Clear previous data
+        tableBody.innerHTML = '';
 
         const labels = [
             "Protecao de Ouvido",
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ];
 
         labels.forEach((label) => {
-            const count = detectionCount[label] || 0;  // Default to 0 if not found
+            const count = detectionCount[label] || 0; 
             const row = `<tr>
                             <td>${label}</td>
                             <td>${count}</td>

@@ -9,7 +9,6 @@ class DetectionConfig(AppConfig):
     def ready(self):
         from .inference import PPEDetector
 
-        # BASE_DIR = /home/mossini/Workspace/Aegis/
         BASE_DIR = Path(__file__).resolve().parent.parent.parent
         model_path = BASE_DIR / 'models' / 'best.pt'
 

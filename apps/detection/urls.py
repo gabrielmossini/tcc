@@ -5,5 +5,8 @@ urlpatterns = [
     path('toggle-mute/', views.toggle_mute, name='toggle_mute'),
     path('detect/', views.detect, name='detect'),
     path('video_feed/', views.video_feed, name='video_feed'),
-    path('get_detections/', views.get_detections, name='get_detections'),    
+    path('get_detections/', views.get_detections, name='get_detections'),
+    path('events/', views.events, name='events'),
+    path('reports/', views.reports, name='reports'),
+    path('cameras/', views.cameras, name='cameras'),
 ]

@@ -1,4 +1,3 @@
-// Function to get the cookie value
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -14,15 +13,13 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Format the birthday input when it loses focus
 document.getElementById("birthday").addEventListener("blur", function () {
     let date = this.value.split('/');
     if (date.length === 3) {
-        this.value = `${date[2]}-${date[1]}-${date[0]}`; // Converts to YYYY-MM-DD for MySQL
+        this.value = `${date[2]}-${date[1]}-${date[0]}`;
     }
 });
 
-// Show success message if URL contains a 'message' parameter
 document.addEventListener("DOMContentLoaded", function () {
     function showMessageFromURL() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -34,10 +31,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (messageContainer) {
                 messageContainer.innerHTML = `<div class="alert alert-success">${message}</div>`;
 
-                // Remove message after 3 seconds
                 setTimeout(() => {
                     messageContainer.innerHTML = "";
-                    window.history.replaceState({}, document.title, window.location.pathname); // Clean URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
                 }, 3000);
             }
         }
