@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <div class="page-title">Cameras</div>
+        <div class="page-subtitle">Hardware status and configuration</div>
+    </div>
+</div>
+
+<div class="cameras-grid">
+    <div class="camera-card">
+        <div class="camera-card-header">
+            <span class="camera-name">CAM-01</span>
+            <span class="badge badge-success"><span class="status-dot online"></span>Online</span>
+        </div>
+        <div class="camera-meta">
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">Location</span>
+                <span class="camera-meta-value">Dock A</span>
+            </div>
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">Resolution</span>
+                <span class="camera-meta-value">1920×1080</span>
+            </div>
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">FPS</span>
+                <span class="camera-meta-value">25</span>
+            </div>
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">Last Event</span>
+                <span class="camera-meta-value">10:15</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="camera-card">
+        <div class="camera-card-header">
+            <span class="camera-name">CAM-02</span>
+            <span class="badge badge-success"><span class="status-dot online"></span>Online</span>
+        </div>
+        <div class="camera-meta">
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">Location</span>
+                <span class="camera-meta-value">Gate 1</span>
+            </div>
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">Resolution</span>
+                <span class="camera-meta-value">1920×1080</span>
+            </div>
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">FPS</span>
+                <span class="camera-meta-value">25</span>
+            </div>
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">Last Event</span>
+                <span class="camera-meta-value">10:11</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="camera-card">
+        <div class="camera-card-header">
+            <span class="camera-name">CAM-03</span>
+            <span class="badge badge-warning"><span class="status-dot offline"></span>Offline</span>
+        </div>
+        <div class="camera-meta">
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">Location</span>
+                <span class="camera-meta-value">Warehouse</span>
+            </div>
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">Resolution</span>
+                <span class="camera-meta-value">1280×720</span>
+            </div>
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">FPS</span>
+                <span class="camera-meta-value">—</span>
+            </div>
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">Last Seen</span>
+                <span class="camera-meta-value">08:43</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="camera-card">
+        <div class="camera-card-header">
+            <span class="camera-name">CAM-04</span>
+            <span class="badge badge-success"><span class="status-dot online"></span>Online</span>
+        </div>
+        <div class="camera-meta">
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">Location</span>
+                <span class="camera-meta-value">Assembly</span>
+            </div>
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">Resolution</span>
+                <span class="camera-meta-value">1920×1080</span>
+            </div>
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">FPS</span>
+                <span class="camera-meta-value">18</span>
+            </div>
+            <div class="camera-meta-row">
+                <span class="camera-meta-label">Last Event</span>
+                <span class="camera-meta-value">09:58</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

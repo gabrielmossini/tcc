@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Chart setup
     const ctx = document.getElementById("detectionChart").getContext("2d");
     const detectionData = {
         labels: [
@@ -45,10 +44,9 @@ document.addEventListener("DOMContentLoaded", function () {
         },
     });
 
-    let sortOrder = 'desc'; // 'asc' for ascending, 'desc' for descending
+    let sortOrder = 'desc';
     let pollingInterval;
 
-    // Update chart data
     function updateChartData(detectionCount) {
         detectionData.labels.forEach((label, index) => {
             if (label.startsWith("Sem ")) {
@@ -57,16 +55,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 detectionData.datasets[1].data[index] = detectionCount[label] || 0;
             }
         });
-        detectionChart.update(); // Ensure the chart is updated
+        detectionChart.update();
     }
 
-    // Update detection table
     function updateDetectionTable(detectionCount) {
         const tableBody = document.getElementById('detection-table-body');
-        tableBody.innerHTML = ''; // Clear previous data
+        tableBody.innerHTML = '';
 
         detectionData.labels.forEach((label) => {
-            const count = detectionCount[label] || 0; // Default to 0 if not found
+            const count = detectionCount[label] || 0;
             const row = `<tr>
                           <td>${label}</td>
                           <td>${count}</td>
@@ -75,7 +72,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Sort table rows
     function sortTable() {
         const tableBody = document.getElementById('detection-table-body');
         const rows = Array.from(tableBody.querySelectorAll('tr'));
@@ -90,13 +86,11 @@ document.addEventListener("DOMContentLoaded", function () {
         rows.forEach(row => tableBody.appendChild(row));
     }
 
-    // Event listener for sorting table
         document.getElementById('sort-detections').addEventListener('click', function() {
-            sortTable(); // Sort the table based on current order
-            sortOrder = sortOrder === 'desc' ? 'asc' : 'desc'; // Toggle the sort order
+            sortTable();
+            sortOrder = sortOrder === 'desc' ? 'asc' : 'desc';
         });
 
-    // Fetch detections from the server
     function fetchDetections() {
         fetch("/get_detections/")
             .then((response) => response.json())
@@ -108,23 +102,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    // Update all data (chart, table, and alerts)
     function updateAll(detectionCount, detectedObjects) {
         updateChartData(detectionCount);
         updateDetectionTable(detectionCount);
-        //handleDetectionAlert(detectedObjects);
     }
 
-    // Start polling
     function startPolling() {
-        pollingInterval = setInterval(fetchDetections, 5000); // Adjust interval if needed
+        pollingInterval = setInterval(fetchDetections, 5000);
     }
 
-    // Stop polling
     function stopPolling() {
         clearInterval(pollingInterval);
     }
 
-    // Start polling immediately
     startPolling();
 });

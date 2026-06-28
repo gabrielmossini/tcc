@@ -1,45 +1,37 @@
-{% extends 'base.html' %} {%load static %} {% block content %}
-<html lang="pt-br">
-    <head>
-        <title>AEGIS - Login</title>
-        <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-    </head>
+{% extends 'base.html' %}
+{% load static %}
+{% block main_class %}login-main{% endblock %}
+{% block content %}
 
-    <body>
-        <div class="container mt-4">
-            <form name="formPainel" id="formPainel" method="post" class="col-6 mt-4 m-auto">
-                <!-- Error in confirm password -->
-                {% if mensagem %}
-                <div class="alert {{class}}">
-                    {{mensagem}}
-                </div>
-
-                {% endif %} {% csrf_token %}
-
-                <div class="container mt-4" id="login">
-                    <div class="col text-center">
-                        <img src="/static/img/logo.webp/"/>
-                    </div>
-                    <div class="col text-center">
-                        <h4 class="py-4 topbar-title">Aegis - Acesso Restrito</h4>
-                    </div>
-                    <div class="input-container mt-4">
-                        <input class="form-control" type="text" name="user" id="name" placeholder="Usuário"/>
-                        <i class="fa-solid fa-user icon"></i>
-                    </div>
-                    <div class="input-container mt-4">
-                        <input class="form-control" type="password" name="password" id="password" placeholder="Senha"/>
-                        <i class="fa-solid fa-lock icon"></i>
-                    </div>
-                    <div class="col text-center">
-                        <button class="btn btn-primary mt-4" type="submit">
-                            ENTRAR
-                            <i class="fa-solid fa-right-to-bracket"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
+<div class="login-shell">
+    <div class="login-left">
+        <div class="login-product-name">AEGIS</div>
+        <div class="login-product-tagline">Operational Safety Intelligence</div>
+        <div class="login-pitch">
+            <div class="login-pitch-line"><strong>Monitor.</strong></div>
+            <div class="login-pitch-line"><strong>Detect.</strong></div>
+            <div class="login-pitch-line"><strong>Prevent.</strong></div>
         </div>
-    </body>
-</html>
+    </div>
+
+    <div class="login-right">
+        <div class="login-form-label">Platform Access</div>
+
+        {% if mensagem %}
+        <div class="login-error">{{ mensagem }}</div>
+        {% endif %}
+
+        <form name="formPainel" id="formPainel" method="post">
+            {% csrf_token %}
+            <div class="login-field">
+                <input class="login-input" type="text" name="user" id="name" placeholder="Username" autocomplete="username" />
+            </div>
+            <div class="login-field">
+                <input class="login-input" type="password" name="password" id="password" placeholder="Password" autocomplete="current-password" />
+            </div>
+            <button type="submit" class="login-submit">Access Platform</button>
+        </form>
+    </div>
+</div>
+
 {% endblock %}

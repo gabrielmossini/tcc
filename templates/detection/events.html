@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <div class="page-title">Eventos de Segurança</div>
+        <div class="page-subtitle">Histórico de violações recentes</div>
+    </div>
+</div>
+
+<div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Hora</th>
+                <th>Câmera</th>
+                <th>Violação</th>
+                <th>Duração</th>
+                <th>Severidade</th>
+            </tr>
+        </thead>
+        <tbody id ="events-tbody">
+            {% for ev in recent_events %}
+            <tr>
+                <td>{{ ev.time }}</td>
+                <td>{{ ev.camera }}</td>
+                <td>{{ ev.violation }}</td>
+                <td>--</td>
+                <td><span class="badge {{ ev.badge }}">{{ ev.severity }}</span></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center;color:var(--text-muted)">No violations recorded today</td>
+            </tr>
+            {% endfor %}
+            <!-- 
+            Hora, Local, Violação, tempo, aviso
+            <tr>
+                <td>10:11</td>
+                <td>Gate 1</td>
+                <td>No Vest</td>
+                <td>4s</td>
+                <td><span class="badge badge-warning">Warning</span></td>
+            </tr>
+            <tr>
+                <td>10:08</td>
+                <td>Dock A</td>
+                <td>No Helmet</td>
+                <td>7s</td>
+                <td><span class="badge badge-warning">Warning</span></td>
+            </tr>
+            <tr>
+                <td>09:58</td>
+                <td>Assembly</td>
+                <td>No Glasses</td>
+                <td>9s</td>
+                <td><span class="badge badge-warning">Warning</span></td>
+            </tr>
+            <tr>
+                <td>09:44</td>
+                <td>Dock A</td>
+                <td>No Helmet</td>
+                <td>5s</td>
+                <td><span class="badge badge-success">Resolved</span></td>
+            </tr>
+            <tr>
+                <td>09:31</td>
+                <td>Warehouse</td>
+                <td>No Vest</td>
+                <td>11s</td>
+                <td><span class="badge badge-success">Resolved</span></td>
+            </tr>
+            <tr>
+                <td>09:18</td>
+                <td>Gate 1</td>
+                <td>No Helmet</td>
+                <td>3s</td>
+                <td><span class="badge badge-success">Resolved</span></td>
+            </tr>
+            <tr>
+                <td>09:02</td>
+                <td>Dock A</td>
+                <td>No Glasses</td>
+                <td>6s</td>
+                <td><span class="badge badge-success">Resolved</span></td>
+            </tr> -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+(function () {
+    function updateLiveCount() {
+        fetch("{% url 'get_detections' %}")
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (!data) return;
+                const counts = data.detectionCount || {};
+                const total = Object.values(counts).reduce((a, b) => a + b, 0);
+                document.getElementById('live-count').textContent = total;
+            })
+            .catch(() => {});
+    }
+
+    updateLiveCount();
+    setInterval(updateLiveCount, 3000);
+})();
+</script>
+
+{% endblock %}
